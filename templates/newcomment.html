@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="post">
+      <div class="post-heading">
+        <div class="post-title">
+          {{post.subject}}
+        </div>
+
+        <div class="post-creator">
+          Created By: {{post.created_by.name.title()}}
+        </div>
+
+        <div class="post-date">
+          {{post.created.strftime("%b %d, %Y")}}
+        </div>
+      </div>
+
+      <div class="post-content">
+        {{post.content | safe}}
+        <br/>
+        <a href="/blog/{{post.key().id()}}/like">Likes</a>({{post.likes}})
+        <a href="/blog/{{post.key().id()}}/comment">Comments({{post.blog_comments.count()}})</a>
+      </div>
+      <br/>
+      <div class="post-comments">
+          <form method="post">
+            <textarea name="comment">{{comment}}</textarea>
+            <br/>
+            <input type="submit" value="Post">
+            <button><a href="/blog/">Cancel</a></button>
+          </form>
+          <div class="error">{{comment_error}}</div>
+      </div>
+      <br/>
+      {% for c in post.blog_comments.order('-created') %}
+          {{ c.render() | safe }}
+          <a href="/blog/{{post.key().id()}}/comment/{{c.key().id()}}/edit">Edit Comment</a>
+          <a href="/blog/{{post.key().id()}}/comment/{{c.key().id()}}/delete">Delete Comment</a>
+          <br/><br/>
+      {% endfor %}
+      <br/><br/>
+    </div>
+{% endblock %}

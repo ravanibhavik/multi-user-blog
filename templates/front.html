@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% for p in posts %}
+      {{ p.render() | safe }}
+      <a href="/blog/{{p.key().id()}}/edit">Edit Blog</a> |
+      <a href="/blog/{{p.key().id()}}/delete">Delete Blog</a>
+      <br/><br/>
+      <b>Comments:</b>
+      <br/><br/>
+      {% for c in p.blog_comments.ancestor(comment_key).order('-created') %}
+          {{ c.render() | safe }}
+          <a href="/blog/{{p.key().id()}}/comment/{{c.key().id()}}/edit">Edit Comment</a> |
+          <a href="/blog/{{p.key().id()}}/comment/{{c.key().id()}}/delete">Delete Comment</a>
+          <br/><br/>
+      {% endfor %}
+  {% endfor %}
+
+{% endblock %}

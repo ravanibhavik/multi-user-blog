@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="5;URL='/blog'">
+    <title>Temporary Page</title>
+</head>
+<body style="font-size: large">
+    <p>
+        {% if error %}
+            {{ error }}
+        {% endif %}
+        {% if delete_message %}
+            {{ delete_message }}
+        {% endif %}
+        {% if comment_error %}
+            {{ comment_error }}
+        {% endif %}
+    </p>
+    <p>You will be redirected in 5 secs.</p>
+</body>
+</html>

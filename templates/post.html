@@ -1,0 +1,22 @@
+<div class="post">
+  <div class="post-heading">
+    <div class="post-title">
+      {{p.subject}}
+    </div>
+
+    <div class="post-creator">
+      Created By: {{p.created_by.name.title()}}
+    </div>
+
+    <div class="post-date">
+      {{p.created.strftime("%b %d, %Y")}}
+    </div>
+  </div>
+
+  <div class="post-content">
+    {{p._render_text | safe}}<br/>
+    <a href="/blog/{{p.key().id()}}/like">Like</a>({{p.likes}})
+    <a href="/blog/{{p.key().id()}}/comment/new">Add Comment({{p.blog_comments.ancestor(comment_key).count()}})</a>
+    <br/><br/>
+  </div>
+</div>
