@@ -246,7 +246,7 @@ class NewPost(BlogHandler):
         if self.user:
             self.render("newpost.html")
         else:
-            self.redirect("/login")
+            return self.redirect("/login")
 
     def post(self):
         if not self.user:
@@ -283,7 +283,7 @@ class EditPost(BlogHandler):
                 self.render("editpost.html", subject=subject, content=content)
 
         else:
-            self.redirect("/login")
+            return self.redirect("/login")
 
     def post(self, post_id):
         if self.user:
@@ -336,7 +336,7 @@ class DeletePost(BlogHandler):
                     error = "Your entry was not deleted."
                     self.render("temporary.html", error=error)
         else:
-            self.redirect("/login")
+            return self.redirect("/login")
 
 
 class LikePost(BlogHandler):
@@ -362,7 +362,7 @@ class LikePost(BlogHandler):
                 self.redirect('/blog')
 
         else:
-            self.redirect("/login")
+            return self.redirect("/login")
 
 
 class NewComment(BlogHandler):
@@ -377,7 +377,7 @@ class NewComment(BlogHandler):
             self.render('newcomment.html', post=post)
 
         else:
-            self.redirect("/login")
+            return self.redirect("/login")
 
     def post(self, post_id):
         if self.user:
@@ -393,7 +393,7 @@ class NewComment(BlogHandler):
                 self.render('newcomment.html', post=post, comment_error=error)
 
         else:
-            self.redirect("/login")
+            return self.redirect("/login")
 
 
 class EditComment(BlogHandler):
@@ -414,7 +414,7 @@ class EditComment(BlogHandler):
                 self.render('temporary.html', comment_error=comment_error)
 
         else:
-            self.redirect("/login")
+            return self.redirect("/login")
 
     def post(self, post_id, comment_id):
         if self.user:
@@ -423,16 +423,20 @@ class EditComment(BlogHandler):
             key = db.Key.from_path('Comment', int(comment_id), parent=comment_key())
             com = db.get(key)
             comment = self.request.get('comment')
-            if comment:
-                com.comment = comment
-                com.put()
-                self.redirect('/blog')
+            if self.user.key().id() == comment.user_id:
+                if comment:
+                    com.comment = comment
+                    com.put()
+                    self.redirect('/blog')
+                else:
+                    error = "comment, please!"
+                    self.render('editcomment.html', post=post, comment=com, comment_error=error)
             else:
-                error = "comment, please!"
-                self.render('editcomment.html', post=post, comment=com, comment_error=error)
+                comment_error = "You are only allowed to edit or delete your own comments."
+                self.render('temporary.html', comment_error=comment_error)
 
         else:
-            self.redirect("/login")
+            return self.redirect("/login")
 
 
 class DeleteComment(BlogHandler):
@@ -457,7 +461,7 @@ class DeleteComment(BlogHandler):
                 self.render('temporary.html', comment_error=comment_error)
 
         else:
-            self.redirect("/login")
+            return self.redirect("/login")
 
 
 ### START OF HELPER FUNCTION FOR SIGN UP.###
