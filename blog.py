@@ -423,7 +423,7 @@ class EditComment(BlogHandler):
             key = db.Key.from_path('Comment', int(comment_id), parent=comment_key())
             com = db.get(key)
             comment = self.request.get('comment')
-            if self.user.key().id() == comment.user_id:
+            if self.user.key().id() == com.user_id:
                 if comment:
                     com.comment = comment
                     com.put()
